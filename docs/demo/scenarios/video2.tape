@@ -35,6 +35,8 @@ Show
 
 # Play the dialog. WIKI_HOLD=8 gives a generous reading beat on each wiki page;
 # tune lower (4–6) if the recording feels slow, higher if voiceover needs room.
+# Measured runtime: ~3:25 with default delays + 4 wiki holds at 8s each = ~3:33.
+# Sleep 225s gives ~12s buffer. Raise this if you raise WIKI_HOLD or add scenes.
 Type "WIKI_HOLD=8 ./docs/demo/scenarios/lib/play-dialog.sh docs/demo/scenarios/video2.dialog"
 Enter
-Sleep 360s
+Sleep 225s

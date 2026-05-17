@@ -28,8 +28,9 @@ Enter
 Sleep 200ms
 Show
 
-# Play the dialog. The Sleep below must exceed the dialog's natural runtime;
-# the player script blocks on its own internal sleeps, so VHS just records.
+# Play the dialog. Sleep must exceed the dialog's natural runtime — the
+# player script blocks on its own internal sleeps, so VHS just records.
+# Measured runtime: ~44s with default delays; 55s gives ~10s buffer at end.
 Type "./docs/demo/scenarios/lib/play-dialog.sh docs/demo/scenarios/video1.dialog"
 Enter
-Sleep 130s
+Sleep 55s
