@@ -127,7 +127,92 @@
 
 ---
 
-## Scene 5 — Submission (15 seconds)
+## Scene 5 — Graph traversal: the RGB LED follow-up (60 seconds)
+
+`[on screen: student is mid-task on the next lab and pings the tutor with a real curriculum troubleshooting question. The wiki pane updates as the tutor moves through linked pages — this is the demo's visible payoff for the typed-edge graph.]`
+
+**Student:**
+
+> Quick question while we're at it — I started Lesson 2, and my RGB LED isn't showing the right color. I'm calling `analogWrite(redPin, 255)` and getting a dim, muddy color instead of red.
+
+**Tutor:**
+
+> That's one of the standard Lesson 2 troubleshooting cases and it almost always has the same chain of causes. Let me walk you through them from the RGB LED page:
+>
+> → **RGB LED:** https://github.com/chrissweet/microelectronics-tutor-demo/wiki/RGB-LED
+>
+> First thing: **common anode vs common cathode**. The kit's RGB LED is most likely common cathode — long leg to ground, write HIGH (or 255) to turn a color on. If yours happens to be common anode, the logic inverts: `analogWrite(redPin, 255)` would mean *off*. Where's your long leg connected?
+
+`[wiki pane shifts to Common-Anode-vs-Common-Cathode]`
+
+**Student:**
+
+> To GND.
+
+**Tutor:**
+
+> Good — that's common cathode, so the inverted-logic case isn't it. Next: **PWM pin usage**. The Uno only does true PWM on D3, D5, D6, D9, D10, D11 — the pins marked with `~`. `analogWrite()` on any other pin just acts like `digitalWrite()`: full on or full off, no mixing. Which pins are your three color legs on?
+>
+> → **Pulse-Width Modulation:** https://github.com/chrissweet/microelectronics-tutor-demo/wiki/Pulse-Width-Modulation
+
+`[wiki pane shifts to Pulse-Width-Modulation]`
+
+**Student:**
+
+> 9, 10, and 7.
+
+**Tutor:**
+
+> There's your first bug. D7 isn't PWM. Move that wire to D11 (or D3, D5, D6) and the blue channel will start mixing properly. One more thing to check while you're in the sketch: **pinMode**. Do you have `pinMode(..., OUTPUT)` for all three pins in `setup()`?
+>
+> → **pinMode Setup:** https://github.com/chrissweet/microelectronics-tutor-demo/wiki/pinMode-Setup
+
+`[wiki pane shifts to pinMode-Setup]`
+
+**Student** *(looks back at code)*:
+
+> …I only set it for red and green.
+
+**Tutor:**
+
+> Second bug. Without `pinMode(blue, OUTPUT)` the blue pin runs as an input with a weak pull-up — it'll barely glow, which looks like "the color is wrong" rather than "the pin is the wrong direction." Add the missing line, rewire blue to a PWM pin, and the colors should snap into place.
+
+`[student edits the sketch, re-uploads. Camera briefly shows the LED on a breadboard cycling through clean primary colors.]`
+
+**Student:**
+
+> Yeah, that fixed it. Both bugs.
+
+---
+
+## Scene 6 — Off-wiki gracefully (20 seconds)
+
+`[on screen: student asks a question outside the wiki's scope. The point of this scene is that the tutor isn't a gatekeeper — it admits scope and offers paths forward.]`
+
+**Student:**
+
+> Random tangent — what about using an ESP32 instead of the Arduino UNO? My friend has one.
+
+**Tutor:**
+
+> Honest answer: the wiki for this course is scoped to the Arduino UNO and the ELEGOO Super Starter Kit, because that's what Labs 1–3 build on. I can do two things from here:
+>
+> 1. Search the web for an Arduino UNO vs ESP32 comparison and summarize. That takes us off the course material but you get a real answer.
+> 2. Stay in scope and keep helping you finish Lesson 2.
+>
+> Which would you like?
+
+**Student:**
+
+> Stay in scope. I'll ask my professor about the ESP32 later.
+
+**Tutor:**
+
+> Sounds good. I'll note that question so we can come back to it.
+
+---
+
+## Scene 7 — Submission (15 seconds)
 
 `[on screen: student paste their code + the resistor reasoning + a wiring photo into the assignment template, clicks Submit]`
 
@@ -140,7 +225,7 @@
 
 ---
 
-## Scene 6 — The same diagnostic moment (30 seconds)
+## Scene 8 — The same diagnostic moment (30 seconds)
 
 `[on screen: cut to the same instructor follow-up as Video 1]`
 
@@ -190,13 +275,21 @@
 |---|---:|
 | Setup overlay | 0:05 |
 | Scene 1 — same question | 0:15 |
-| Scene 2 — soft redirect | 0:30 |
-| Scene 3 — concept walk | 0:50 |
-| Scene 4 — code scaffold | 0:50 |
-| Scene 5 — submission | 0:15 |
-| Scene 6 — diagnostic | 0:30 |
+| Scene 2 — soft redirect (Scenario 1) | 0:30 |
+| Scene 3 — concept walk (Scenario 1) | 0:50 |
+| Scene 4 — code scaffold (Scenario 1) | 0:50 |
+| Scene 5 — graph traversal: RGB LED (Scenario 2) | 1:00 |
+| Scene 6 — off-wiki gracefully: ESP32 (Scenario 3) | 0:20 |
+| Scene 7 — submission | 0:15 |
+| Scene 8 — diagnostic | 0:30 |
 | Closing card | 0:15 |
-| **Total** | **~3:30** |
+| **Total** | **~4:50** |
+
+> Scene 5 is the load-bearing demo moment — the visible wiki-llm pattern in
+> action as the tutor walks the typed-edge graph
+> (`RGB-LED → Common-Anode-vs-Common-Cathode`, `RGB-LED → Pulse-Width-Modulation`,
+> `RGB-LED → pinMode-Setup`). If the total comes in long, trim Scene 3 or
+> Scene 4 rather than Scene 5.
 
 ## Dialog adjustments before recording
 
