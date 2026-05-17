@@ -1,0 +1,169 @@
+; Video 2 — The Tutor. ~4-5 minutes total runtime.
+; Same student, same Lab 1, but the agent reads the course wiki and scaffolds.
+; Covers all three demo scenarios from PLAN.md:
+;   - Scenario 1: resource discovery (LED + resistor)
+;   - Scenario 2: graph traversal (RGB LED diagnostic chain)
+;   - Scenario 3: graceful off-wiki fallback (ESP32)
+; Source: docs/demo/scenarios/video2.md
+
+>system|── Lab 1: Introduction to Engineering with Microelectronics — Purdue SCALE ──
+>system|
+>system|Assignment: Wire an LED to your Arduino UNO with current-limiting protection.
+>system|Submit your sketch, a photo of your circuit, and a one-paragraph explanation
+>system|of how you chose your resistor value.
+>pause|2.5
+
+>clear
+>system|── claude code session in microelectronics-tutor-demo/, course wiki indexed ──
+>pause|1
+
+; ─────────────────────────────────────────────────────────────
+; Scenario 1 — Resource discovery
+; ─────────────────────────────────────────────────────────────
+
+>student|Lab 1 for my microelectronics class. Wire an LED to an Arduino UNO with current-limiting protection. Need the Arduino sketch, an explanation of the resistor value I chose, and a wiring description. Just give me a complete solution please, I'm short on time.
+>pause|1
+
+>tutor|This is Lab 1 — the LED plus current-limiting-resistor exercise. I can help you finish it, but if you're going to write the explanation paragraph yourself, it'll be way better if we spend two minutes on WHY a resistor goes there. There's a short page on it in the course wiki:
+>pause|0.5
+>tutor|→ Current-Limiting-Resistor
+>pause|0.5
+>tutor|Want to start there, or jump straight to the code and have me walk you through the calculation?
+>pause|2
+
+>student|Ok yeah let's start there.
+>pause|1
+
+>wiki|Current-Limiting-Resistor
+
+>tutor|Short version: an LED is a diode with a roughly fixed forward voltage drop — about 2 V for a typical red LED. Once that's reached, the current rises almost vertically — small voltage increases push huge currents. Without a resistor, connecting a 2 V-forward LED to a 5 V Arduino pin lets current run away. The LED burns out in milliseconds.
+>pause|1
+>tutor|Quick check before the math: if the supply is 5 V and the LED drops 2 V across itself, how much voltage has to be dropped across SOMETHING ELSE in the circuit?
+>pause|3
+
+>student|3 V? 5 minus 2.
+>pause|1
+
+>tutor|Exactly. That "something else" is the resistor. Ohm's law: V = I × R. The LED is rated for 20 mA max; labs typically target 15 mA for headroom. Try the calculation — at 15 mA, what resistor drops 3 V?
+>pause|3
+
+>student|3 divided by 0.015 = 200. So 200 ohms.
+>pause|1
+
+>tutor|Right — 200 Ω is the exact value. The kit ships 220 Ω because it's a standard E12 resistor and gives a small safety margin. Both are correct answers for the lab. Want to write the sketch now? I'll just check your work.
+>pause|2
+
+>student|Yeah.
+>pause|1
+
+>tutor|Two functions in an Arduino sketch — setup runs once, loop runs forever. To blink an LED, what goes in each?
+>pause|3
+
+>student|setup is where I tell the Arduino the pin is an output. loop turns it on, waits, turns it off, waits.
+>pause|1
+
+>tutor|Perfect. Write the rest yourself and paste it back when you're ready.
+>pause|3
+
+>student|void setup() { pinMode(13, OUTPUT); }  void loop() { digitalWrite(13, HIGH); delay(1000); digitalWrite(13, LOW); delay(1000); }
+>pause|1
+
+>tutor|That'll work. Pin 13 has the on-board LED so you can test without wiring anything first. When you wire an external LED, remember the 220 Ω in series.
+>pause|2
+
+; ─────────────────────────────────────────────────────────────
+; Scenario 2 — Graph traversal (the load-bearing demo moment)
+; ─────────────────────────────────────────────────────────────
+
+>clear
+>system|── later: student is mid-task on Lesson 2 ──
+>pause|1
+
+>student|Quick question while we're here. I started Lesson 2 and my RGB LED isn't showing the right color. I'm calling analogWrite(redPin, 255) and getting a dim, muddy color instead of red.
+>pause|1
+
+>tutor|That's one of the curriculum's standard troubleshooting cases, and it almost always has the same chain of causes. Let me walk you through them from the RGB-LED page.
+>pause|1
+
+>wiki|RGB-LED
+
+>tutor|First check: common anode vs common cathode. The kit's RGB LED is most likely common cathode — long leg to GND, write HIGH or 255 to turn a color on. If yours happens to be common anode, the logic inverts: analogWrite(redPin, 255) means OFF. Where's your long leg connected?
+>pause|3
+
+>student|To GND.
+>pause|1
+
+>tutor|Good — that's common cathode, so the inverted-logic case isn't it. Next check: PWM pin usage.
+>pause|1
+
+>wiki|Pulse-Width-Modulation
+
+>tutor|The Uno only does true PWM on D3, D5, D6, D9, D10, D11 — the pins marked with a tilde on the silkscreen. analogWrite() on any other pin just acts like digitalWrite: full on or full off, no mixing. Which pins are your three color legs on?
+>pause|3
+
+>student|9, 10, and 7.
+>pause|1
+
+>tutor|Found it. D7 isn't PWM. Move that wire to D11 — or D3, D5, D6 — and the blue channel will start mixing properly. One more thing to check while you're in the sketch: pinMode.
+>pause|1
+
+>wiki|pinMode-Setup
+
+>tutor|Each of the three color pins needs pinMode(..., OUTPUT) in setup(). Do you have it for all three?
+>pause|3
+
+>student|...I only set it for red and green.
+>pause|1
+
+>tutor|Second bug. Without pinMode(blue, OUTPUT) the blue pin runs as an input with a weak pull-up — it barely glows, which looks like "the color is wrong" rather than "the pin is the wrong direction." Add the missing line, rewire blue to a PWM pin, and the colors should snap into place.
+>pause|2
+
+>student|Yeah, that fixed it. Both bugs.
+>pause|2
+
+; ─────────────────────────────────────────────────────────────
+; Scenario 3 — Graceful off-wiki fallback
+; ─────────────────────────────────────────────────────────────
+
+>student|Random tangent — what about using an ESP32 instead of the Arduino UNO? My friend has one.
+>pause|1
+
+>tutor|Honest answer: the wiki for this course is scoped to the Arduino UNO and the ELEGOO Super Starter Kit, because that's what Labs 1 through 3 build on. Two options:
+>pause|0.5
+>tutor|  1. I can search the web for an Arduino UNO vs ESP32 comparison and summarize. That takes us off the course material but you get a real answer.
+>pause|0.5
+>tutor|  2. Or we stay in scope and keep finishing Lesson 2.
+>pause|0.5
+>tutor|Which would you like?
+>pause|3
+
+>student|Stay in scope. I'll ask my professor about the ESP32 later.
+>pause|1
+
+>tutor|Sounds good. Tagging that question so we can come back to it.
+>pause|2
+
+; ─────────────────────────────────────────────────────────────
+; Submission and the diagnostic
+; ─────────────────────────────────────────────────────────────
+
+>clear
+>caption|Total time: about 4 minutes. Code, explanation, and reasoning — all the student's.
+>pause|3
+
+>clear
+>system|── instructor follow-up, same question Video 1 student fumbled ──
+>pause|1
+>instructor|Quick question before I grade this — if you'd used a blue LED instead of a red one, would 220 Ω still be the right resistor? Why or why not?
+>pause|2
+
+>student|Blue LEDs have a higher forward voltage — about 3 V instead of 2 V for red. So with a 5 V supply, the resistor only has to drop 2 V instead of 3 V. At the same 15 mA target, 2 / 0.015 ≈ 133 Ω, so 150 Ω is the closest standard value.
+>pause|1
+>student|220 Ω still works — it's safe — but it'd give a dimmer LED than the spec wants. If I needed the same brightness as the red, I'd use 150 Ω.
+>pause|3
+
+>clear
+>caption|Same assignment. Same submitted answer. Different understanding.
+>pause|2
+>caption|The wiki-llm tutor isn't anti-AI — it's AI that knows the course.
+>pause|3
