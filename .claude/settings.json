@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd wiki/microelectronics-tutor-demo.wiki && git status:*)",
+      "Bash(cd wiki/microelectronics-tutor-demo.wiki && git diff:*)",
+      "Bash(cd wiki/microelectronics-tutor-demo.wiki && git log:*)",
+      "Bash(cd wiki/microelectronics-tutor-demo.wiki && git add:*)",
+      "Bash(cd wiki/microelectronics-tutor-demo.wiki && git commit *)",
+      "Bash(git -C wiki/microelectronics-tutor-demo.wiki status:*)",
+      "Bash(git -C wiki/microelectronics-tutor-demo.wiki diff:*)",
+      "Bash(git -C wiki/microelectronics-tutor-demo.wiki log:*)",
+      "Bash(git -C wiki/microelectronics-tutor-demo.wiki add:*)",
+      "Bash(git -C wiki/microelectronics-tutor-demo.wiki commit *)",
+      "Bash(./scripts/kg/build-graph.sh)",
+      "Bash(./wiki/init-wiki.sh)",
+      "Bash(./wiki/init-wiki.sh *)",
+      "Bash(./wiki/agents/claude-code/setup.sh)",
+      "Bash(./wiki/agents/claude-code/setup.sh *)",
+      "Bash(.venv/bin/python *)",
+      "Bash(uv run python *)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/session-start.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

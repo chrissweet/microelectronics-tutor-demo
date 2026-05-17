@@ -24,7 +24,7 @@ This is the `llm-wiki.md`-style Ingest. It is **not** for filing our own experim
 
 ## Procedure
 
-Follow the Ingest procedure in `wiki/{{REPO_NAME}}.wiki/SCHEMA_{{REPO_NAME}}.md`. Pointers:
+Follow the Ingest procedure in `wiki/microelectronics-tutor-demo.wiki/SCHEMA_microelectronics-tutor-demo.md`. Pointers:
 
 1. Read the source. If long, ask the user which sections matter most for this project.
 2. Discuss the key takeaways with the user briefly before writing pages. Confirm the framing and the cross-link targets.
@@ -32,8 +32,8 @@ Follow the Ingest procedure in `wiki/{{REPO_NAME}}.wiki/SCHEMA_{{REPO_NAME}}.md`
 4. Page body: one-sentence opening line stating what the source is and what it contributes. Then sections for: contribution, methods or arguments relevant here, where it intersects with this project, quotes worth keeping, link to the source. Concise reference style.
 5. Update related entity and concept pages so the new source reinforces or revises what they say. If the source contradicts a wiki claim, update or flag the affected page, do not leave the contradiction.
 6. Fix cross-references in both directions on every affected page (`[[Page]]` in frontmatter, `[Display](Page)` in body).
-7. Update `index_{{REPO_NAME}}.md` under the "Source summaries" category.
-8. Append a `## [YYYY-MM-DD] ingest | Source title` entry to `log_{{REPO_NAME}}.md` with 2 to 5 bullets.
+7. Update `index_microelectronics-tutor-demo.md` under the "Source summaries" category.
+8. Append a `## [YYYY-MM-DD] ingest | Source title` entry to `log_microelectronics-tutor-demo.md` with 2 to 5 bullets.
 9. Optionally rebuild the knowledge graph: `./scripts/kg/build-graph.sh`.
 10. Stage changed files by name, commit in the wiki's own git repo with a descriptive message. Do not push unless the user requests.
 

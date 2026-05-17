@@ -7,31 +7,31 @@ The wiki is a compounding artifact. Over time it accretes orphans, broken links,
 
 ## What to check
 
-Walk `wiki/{{REPO_NAME}}.wiki/` and report on each of the following. For each issue, list the affected page(s) and propose a fix.
+Walk `wiki/microelectronics-tutor-demo.wiki/` and report on each of the following. For each issue, list the affected page(s) and propose a fix.
 
-1. **Orphan pages.** Pages with no inbound links from other wiki pages or from `index_{{REPO_NAME}}.md`. Either link them in from a parent page, or flag them for archival.
+1. **Orphan pages.** Pages with no inbound links from other wiki pages or from `index_microelectronics-tutor-demo.md`. Either link them in from a parent page, or flag them for archival.
 2. **Dead links.** `[Display](Page-Name)` or `[[Page-Name]]` references pointing to files that do not exist. Either fix the target name or remove the broken link.
 3. **Stale claims.** Pages whose claims are superseded by newer pages or by current code/results. Update the page or add a note pointing to the superseding page.
 4. **Missing frontmatter.** Pages without a frontmatter block at the top, or with frontmatter missing required fields (`type:`, `up:`). Infer the fields from page content and add them.
 5. **`type: untyped` pages.** Review each and assign a proper type if now obvious (`concept`, `entity`, `source-summary`, `synthesis`, `index`, `comparison`).
 6. **Missing concept pages.** Concepts mentioned in multiple body texts that do not have their own page. Promote to standalone pages with proper frontmatter.
 7. **Missing cross-references.** Pages that should link to each other but don't (especially: bidirectional links — if A links to B, B should link back to A unless one is hub-and-spoke by design).
-8. **Index gaps.** Pages that exist in the wiki but are not listed in `index_{{REPO_NAME}}.md`.
+8. **Index gaps.** Pages that exist in the wiki but are not listed in `index_microelectronics-tutor-demo.md`.
 9. **Naming convention.** Page filenames should be `Title-Case-Hyphenated.md`. Flag deviations.
 10. **Special-file integrity.** `Home_…md`, `index_…md`, `log_…md`, `SCHEMA_…md`, `Home.md` (redirect) all present and well-formed.
 
 ## Reference
 
-Defer to `wiki/{{REPO_NAME}}.wiki/SCHEMA_{{REPO_NAME}}.md` for the precise conventions. This skill is a checklist, not a redefinition.
+Defer to `wiki/microelectronics-tutor-demo.wiki/SCHEMA_microelectronics-tutor-demo.md` for the precise conventions. This skill is a checklist, not a redefinition.
 
 ## Procedure
 
-1. Read `index_{{REPO_NAME}}.md` to get the canonical list of pages.
+1. Read `index_microelectronics-tutor-demo.md` to get the canonical list of pages.
 2. List all `.md` files in the wiki directory.
 3. For each check above, scan systematically and collect findings.
 4. Report findings to the user grouped by check type, with one or two example pages per finding.
 5. Ask which findings to fix in this pass. Lint is incremental; not every issue needs to be addressed at once.
-6. For accepted fixes, apply them with cross-reference repair in both directions, update `index_{{REPO_NAME}}.md` as needed, and append a `## [YYYY-MM-DD] lint | Subject` entry to `log_{{REPO_NAME}}.md` describing what was cleaned up.
+6. For accepted fixes, apply them with cross-reference repair in both directions, update `index_microelectronics-tutor-demo.md` as needed, and append a `## [YYYY-MM-DD] lint | Subject` entry to `log_microelectronics-tutor-demo.md` describing what was cleaned up.
 7. Optionally rebuild the knowledge graph: `./scripts/kg/build-graph.sh`.
 8. Stage changed files by name, commit in the wiki's own git repo. Do not push unless asked.
 

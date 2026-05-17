@@ -4,7 +4,7 @@ description: Ingest a new source document (paper, article, design doc) into the 
 
 You are ingesting a new external source document (paper, article, design doc, README, external reference) into the wiki. This is the llm-wiki-style Ingest. It is NOT for filing experiment results — for experiment results, use `/wiki-experiment` instead.
 
-Full procedure: see `.claude/skills/wiki-source.md` and `wiki/{{REPO_NAME}}.wiki/SCHEMA_{{REPO_NAME}}.md`. Summary:
+Full procedure: see `.claude/skills/wiki-source.md` and `wiki/microelectronics-tutor-demo.wiki/SCHEMA_microelectronics-tutor-demo.md`. Summary:
 
 1. Read the source. If long, ask the user which sections matter most for this project.
 2. Discuss key takeaways with the user briefly before writing pages. Confirm framing and cross-link targets.
@@ -12,13 +12,13 @@ Full procedure: see `.claude/skills/wiki-source.md` and `wiki/{{REPO_NAME}}.wiki
 4. Page body: one-sentence opening line, then sections for contribution, methods or arguments relevant here, where it intersects with this project, quotes worth keeping, link to the source.
 5. Update related entity and concept pages so the new source reinforces or revises what they say. If contradiction, update or flag the affected page.
 6. Fix cross-references in both directions on every affected page.
-7. Update `index_{{REPO_NAME}}.md` under "Source summaries".
-8. Append a `## [YYYY-MM-DD] ingest | Source title` entry to `log_{{REPO_NAME}}.md`.
+7. Update `index_microelectronics-tutor-demo.md` under "Source summaries".
+8. Append a `## [YYYY-MM-DD] ingest | Source title` entry to `log_microelectronics-tutor-demo.md`.
 9. Optionally rebuild the knowledge graph: `./scripts/kg/build-graph.sh`.
 10. **Finish the cycle.** Stage and commit in the wiki's own git repo, without asking:
     ```
-    git -C wiki/{{REPO_NAME}}.wiki add <files-by-name>
-    git -C wiki/{{REPO_NAME}}.wiki commit -m "<descriptive message>"
+    git -C wiki/microelectronics-tutor-demo.wiki add <files-by-name>
+    git -C wiki/microelectronics-tutor-demo.wiki commit -m "<descriptive message>"
     ```
     Local commits are reversible. Push only if the user requests.
 
