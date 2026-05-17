@@ -31,9 +31,10 @@ Enter
 Sleep 200ms
 Show
 
-# Measured runtime: ~3:13 for the captured session of 2026-05-17 (12 turns,
-# 2 wiki references, no `--bare`, WIKI_HOLD=8). Re-time after each recapture
-# with: { time ./docs/demo/scenarios/lib/play-dialog.sh ... > /dev/null; }
+# Measured runtime: ~4:05 for the two-agent capture of 2026-05-17 (9 turns
+# after manual splicing out of late-conversation meta-breaks, 3 wiki
+# references, WIKI_HOLD=8). Re-time after each recapture with:
+#   { time ./docs/demo/scenarios/lib/play-dialog.sh ... > /dev/null; }
 Type "WIKI_HOLD=8 ./docs/demo/scenarios/lib/play-dialog.sh docs/demo/scenarios/video2-real.dialog"
 Enter
-Sleep 200s
+Sleep 260s
