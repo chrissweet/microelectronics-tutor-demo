@@ -52,7 +52,11 @@ C_INSTRUCTOR=$'\033[1;31m'
 C_CAPTION=$'\033[1;37m'
 
 stream() {
-  local text="$1" delay="$2" i
+  local raw="$1" delay="$2" text i
+  # Expand literal \n in the body to actual newlines so captured multi-paragraph
+  # responses (from real Claude sessions) render correctly. Authors can also
+  # use \n in scripted dialog files to force a line break inside one directive.
+  text="${raw//\\n/$'\n'}"
   for (( i=0; i<${#text}; i++ )); do
     printf "%s" "${text:$i:1}"
     sleep "$delay"
