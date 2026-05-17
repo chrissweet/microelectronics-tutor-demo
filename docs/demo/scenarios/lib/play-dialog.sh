@@ -17,8 +17,10 @@
 #   >code-block|...~~...  — multiple code lines separated by `~~`
 #   >pause|N              — sleep N seconds (decimals allowed)
 #   >clear                — clear the screen
-#   >wiki|Page-Name       — clear screen, render wiki/Page-Name.md via glow,
-#                           then sleep $WIKI_HOLD seconds (default 6)
+#   >wiki|Page-Name       — print an inline GitHub URL pointing at the wiki page;
+#                           the tutor's prose has already quoted the relevant
+#                           section, so this is a reference, not a takeover.
+#                           Override base URL via WIKI_URL_BASE env var.
 #   >bell                 — terminal bell (audio cue for editing markers)
 #
 # Speeds can be overridden via env:
@@ -75,21 +77,18 @@ play_caption() {
 }
 
 play_wiki() {
+  # Inline reference, not a full-screen takeover. Earlier versions of this
+  # script cleared the screen and rendered the whole page via glow, but
+  # that wiped the tutor's question mid-conversation and made the recording
+  # feel jarring. Now we just print a GitHub wiki URL beneath the tutor's
+  # turn — the page content was already quoted inline by the tutor, so the
+  # URL is a pointer for "more if you want it" rather than a takeover.
+  # Hardcoded 1s pause so the audience can register the URL; tune via
+  # WIKI_URL_PAUSE if needed.
   local page="$1"
-  local path="$WIKI_DIR/$page.md"
-  clear
-  if [[ -f "$path" ]]; then
-    printf "${C_DIM}── wiki: %s ──────────────────────────────${C_RESET}\n\n" "$page"
-    # Strip [Display](Page-Name) link targets so glow doesn't expand
-    # them to ugly absolute file paths in the rendered output.
-    sed -E 's/\[([^]]+)\]\([^)]+\)/\1/g' "$path" \
-      | glow -s dark -w 100 - 2>/dev/null \
-      || cat "$path"
-  else
-    printf "${C_INSTRUCTOR}[wiki page not found: %s]${C_RESET}\n" "$path"
-  fi
-  sleep "$WIKI_HOLD"
-  clear
+  local url="${WIKI_URL_BASE:-https://github.com/chrissweet/microelectronics-tutor-demo/wiki}/$page"
+  printf "${C_DIM}    → %s${C_RESET}\n" "$url"
+  sleep "${WIKI_URL_PAUSE:-1}"
 }
 
 play_line() {

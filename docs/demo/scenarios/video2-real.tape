@@ -32,8 +32,9 @@ Sleep 200ms
 Show
 
 # Captured live with a human-in-the-loop student (2026-05-17, third take).
-# 11 tutor turns + 7 wiki page renders + closing scene. Sleep 250s is a
-# generous upper bound; trim with ffmpeg after if needed.
-Type "WIKI_HOLD=8 ./docs/demo/scenarios/lib/play-dialog.sh docs/demo/scenarios/video2-real.dialog"
+# 11 tutor turns + 7 inline wiki URL references + closing scene. With the
+# inline-URL behavior (vs the older full-screen glow render) the recording
+# is ~2:40 instead of 3:35; Sleep 180s is the tight upper bound.
+Type "./docs/demo/scenarios/lib/play-dialog.sh docs/demo/scenarios/video2-real.dialog"
 Enter
-Sleep 250s
+Sleep 195s
