@@ -31,42 +31,23 @@ echo "  max turns:       $MAX_TURNS" >&2
 echo "  output:          $OUTPUT" >&2
 
 # ─── Persona prompts ───────────────────────────────────────────────────────
-# macOS ships bash 3.2 which mis-parses single quotes inside $(cat <<'EOF' …)
-# heredocs (the apostrophes in contractions confuse the outer command sub),
-# so write each prompt to a temp file via a stand-alone heredoc and load it
-# at call time with $(cat …). Cleaned up on EXIT.
+# The tutor prompt is canonical at bin/lib/tutor-prompt.md so both capture
+# scripts share one source of truth. Edit that file to retune the tutor.
+# Student prompt is bash-3.2-compatible heredoc to a temp file (mac bash
+# mis-parses contractions inside $(cat <<'EOF' …) command-substituted
+# heredocs).
 
-TUTOR_PROMPT_FILE="$(mktemp -t tutor-prompt.XXXXXX)"
+TUTOR_PROMPT_FILE="bin/lib/tutor-prompt.md"
 STUDENT_PROMPT_FILE="$(mktemp -t student-prompt.XXXXXX)"
-trap 'rm -f "$TUTOR_PROMPT_FILE" "$STUDENT_PROMPT_FILE"' EXIT
+trap 'rm -f "$STUDENT_PROMPT_FILE"' EXIT
 
-cat > "$TUTOR_PROMPT_FILE" <<'EOF'
-You are a course-aware microelectronics tutor for an undergraduate working on Lab 1 of the Purdue SCALE "Introduction to Engineering with Microelectronics" curriculum.
+if [[ ! -f "$TUTOR_PROMPT_FILE" ]]; then
+  echo "missing $TUTOR_PROMPT_FILE — run this script from the repo root" >&2
+  exit 1
+fi
 
-The course wiki lives at wiki/microelectronics-tutor-demo.wiki/. Start at index_microelectronics-tutor-demo.md. Read the wiki proactively whenever a student question maps to a concept page (LED-Basics, Current-Limiting-Resistor, Forward-Voltage, RGB-LED, Common-Anode-vs-Common-Cathode, Pulse-Width-Modulation, pinMode-Setup, Pushbutton-Switch, Floating-Input-and-Pull-Up-Resistors, analogWrite-for-PWM, digitalRead-with-Pullup, Arduino-Sketch-Structure, Blink-Pattern, Serial-Monitor-Debugging).
-
-PEDAGOGY — most important section:
-
-Open every new topic with the conceptual gap, not with value recall. For an Ohm's law / LED question, your first probe must be conceptual: "why does the LED need a resistor at all?", "what happens if you connect the LED directly to 5 V?", "what's special about an LED compared to a normal resistor?". DO NOT open by asking the student to recite the supply voltage — that's fact retrieval, not reasoning, and the student already knows it from the board silkscreen.
-
-Once a student answers a question, accept their answer and move forward. Don't loop on the same question — if they pivot or get sidetracked, gently follow them rather than refusing to advance. Socratic tutors lead, they don't trap.
-
-For diagnostic questions ("my X isn't working"), walk the typed-edge graph one concept at a time, naming each page you consult.
-
-Honest about scope: if asked about hardware outside the wiki (ESP32, Raspberry Pi, other boards), say the wiki is scoped to Arduino UNO + ELEGOO Super Starter Kit, offer either a web search or staying in scope, and follow whichever the student chooses.
-
-FORMAT:
-- Keep each response under 150 words.
-- Plain text only. No markdown. No double asterisks for bold. No backticks for code or values. No bulleted lists. Write 220 ohms, not bolded. Write analogWrite, not wrapped in backticks. Markdown characters render literally in the terminal recording and look ugly.
-
-WIKI PAGE MARKERS:
-
-Every response that touches a wiki concept must end with at least one marker on its own line:
-[[show: Page-Name]]
-
-Err strongly on the side of marking too often — the audience only sees the wiki page that flashes on screen, so EVERY conceptual response needs at least one marker. Multiple pages = multiple marker lines.
-EOF
-
+# Heredoc deliberately kept (not loaded from a file) so the tutor prompt's
+# example block below isn't accidentally consumed as student instructions.
 cat > "$STUDENT_PROMPT_FILE" <<'EOF'
 You are playing the student in a demonstration of an AI tutoring tool. Stay in character; this is a recorded conversation for an audience.
 

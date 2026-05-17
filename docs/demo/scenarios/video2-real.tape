@@ -31,10 +31,9 @@ Enter
 Sleep 200ms
 Show
 
-# Measured runtime: ~4:05 for the two-agent capture of 2026-05-17 (9 turns
-# after manual splicing out of late-conversation meta-breaks, 3 wiki
-# references, WIKI_HOLD=8). Re-time after each recapture with:
-#   { time ./docs/demo/scenarios/lib/play-dialog.sh ... > /dev/null; }
+# Captured live with a human-in-the-loop student (2026-05-17, third take).
+# 11 tutor turns + 7 wiki page renders + closing scene. Sleep 250s is a
+# generous upper bound; trim with ffmpeg after if needed.
 Type "WIKI_HOLD=8 ./docs/demo/scenarios/lib/play-dialog.sh docs/demo/scenarios/video2-real.dialog"
 Enter
-Sleep 260s
+Sleep 250s
