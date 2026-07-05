@@ -26,6 +26,10 @@ top of each runner if your layout differs.
   `run-probes-v2.sh claude-opus-4-8 1`.
 - `run-expansion.sh` — multi-model x multi-run corpus (150 sessions).
 - `run-matrix.sh` — prompt x model visible-use matrix (demo vs template prompt).
+  The "template" arm needs the template repo's tutor prompt; the script fetches
+  it from `llm-wiki-tutor-template` at runtime if absent (via `gh` or `curl`)
+  and fails loudly if it cannot, so it runs from a clean clone with no manual
+  setup.
 - `redteam/` — adaptive two-agent probe: a tool-less attacker adapts each turn
   to the tutor's reply (`run-redteam.sh`, `run-pilot.sh`, `attacker-prompt.md`).
 - `hooktest/` — SessionStart hook A/B (`run-hook-ab.sh`) and hook-fire
