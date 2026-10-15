@@ -21,7 +21,7 @@
 
 ## This repository uses LLM wiki memory
 
-Intro to Microelectronics keeps a persistent, LLM-maintained knowledge base under `wiki/microelectronics-tutor-demo.wiki/` (a separate git repo), following the [llm-wiki pattern](https://github.com/tobi/llm-wiki). It is the project's durable memory: findings, decisions, experiment results, and intermediate insights belong in the wiki and accumulate over time. Three operations, **Query** (read it), **Ingest** (write to it), and **Lint** (health-check it), are codified in `CLAUDE.md`, in `wiki/microelectronics-tutor-demo.wiki/SCHEMA_microelectronics-tutor-demo.md`, and in the `.claude/commands/` slash commands (`/wiki-source`, `/wiki-experiment`, `/wiki-lint`).
+Intro to Microelectronics keeps a persistent, LLM-maintained knowledge base under `.llm-wiki/` (a separate git repo, maintained through the [llm-wiki plugin](https://github.com/LA3D-LLM-Agents/llm-wiki-colab)), following the [llm-wiki pattern](https://github.com/tobi/llm-wiki). It is the project's durable memory: findings, decisions, experiment results, and intermediate insights belong in the wiki and accumulate over time. Three operations, **Query** (read it), **Ingest** (write to it), and **Lint** (health-check it), are codified in `.llm-wiki/SCHEMA_microelectronics-tutor-demo.md` and in the llm-wiki plugin's skills (`/wiki-source`, `/wiki-experiment`, `/wiki-lint`).
 
 See also [llm-wiki.md](llm-wiki.md) in this repo for the underlying pattern.
 
@@ -32,23 +32,22 @@ New to Intro to Microelectronics? Clone the project repo, clone the wiki as a si
 ```bash
 git clone https://github.com/chrissweet/microelectronics-tutor-demo.git
 cd microelectronics-tutor-demo
-git clone https://github.com/chrissweet/microelectronics-tutor-demo.wiki.git wiki/microelectronics-tutor-demo.wiki
-./wiki/agents/claude-code/setup.sh --seed-memory
+# then, in Claude Code or Codex with the llm-wiki plugin installed, run /wiki-init to attach https://github.com/chrissweet/microelectronics-tutor-demo.wiki.git at .llm-wiki
 ```
 
-After this, open Claude Code inside the repo. It will automatically pick up the project's slash commands (`/wiki-source` to ingest an external document, `/wiki-experiment` to file experiment results, `/wiki-lint` to health-check the wiki) along with the read/write/commit conventions in `CLAUDE.md`.
+After this, open Claude Code inside the repo. It will automatically pick up the project's slash commands (`/wiki-source` to ingest an external document, `/wiki-experiment` to file experiment results, `/wiki-lint` to health-check the wiki) along with the plugin's wiki guidance (there is no `CLAUDE.md`; the repository orientation is on the wiki's Home page).
 
-The wiki at `wiki/microelectronics-tutor-demo.wiki/` is a separate git repo with its own history and its own remote. After any wiki edit, commit in the wiki repo (not the project repo):
+The wiki at `.llm-wiki/` is a separate git repo with its own history and its own remote. After any wiki edit, commit in the wiki repo (not the project repo):
 
 ```bash
-git -C wiki/microelectronics-tutor-demo.wiki add <files>
-git -C wiki/microelectronics-tutor-demo.wiki commit -m "..."
+git -C .llm-wiki add <files>
+git -C .llm-wiki commit -m "..."
 ```
 
 Push the wiki only when you intend to publish the changes:
 
 ```bash
-git -C wiki/microelectronics-tutor-demo.wiki push origin master
+git -C .llm-wiki push origin master
 ```
 
 ## Security considerations
@@ -68,8 +67,7 @@ The `.claude/settings.json` shipped here pre-approves a minimal, scoped set:
 | `git status`, `git diff`, `git log` (read-only) | `git push` (any path, any remote) |
 | `git -C wiki/<repo>.wiki/ add` and `commit` | `git push` to anything |
 | `./scripts/kg/build-graph.sh` (if KG pipeline is present) | `gh repo delete` and other destructive `gh` operations |
-| `./wiki/init-wiki.sh` and `./wiki/agents/claude-code/setup.sh` | `rm -rf`, other destructive shell operations |
-| Venv Python invocations | Any command outside the allowlist |
+| the llm-wiki plugin's `/wiki-init` | `rm -rf`, other destructive shell operations |
 
 In particular: **`git push` is never pre-approved** in the default template. The agent must ask before publishing anything to a remote. **Repository deletion** via `gh repo delete` also always prompts, and GitHub itself requires a typed confirmation on top of that. **`rm -rf` and other destructive shell operations** always prompt.
 
